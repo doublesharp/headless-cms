@@ -14,8 +14,8 @@ PLUGIN=advanced-custom-fields && \
 curl -sL ${WP_REPO_BASE}/${PLUGIN}.${VERSION_ADVANCED_CUSTOM_FIELDS}.zip -o /tmp/${PLUGIN}.zip && \
 unzip /tmp/${PLUGIN}.zip -d ${WP_PLUGINS_DIR} && \
 \
-PLUGIN=advanced-custom-fields-extended && \
-curl -sL ${WP_REPO_BASE}/${PLUGIN}.${VERSION_ADVANCED_CUSTOM_FIELDS_EXTENDED}.zip -o /tmp/${PLUGIN}.zip && \
+PLUGIN=acf-extended && \
+curl -sL ${WP_REPO_BASE}/${PLUGIN}.${VERSION_ACF_EXTENDED}.zip -o /tmp/${PLUGIN}.zip && \
 unzip /tmp/${PLUGIN}.zip -d ${WP_PLUGINS_DIR} && \
 \
 PLUGIN=amazon-s3-and-cloudfront && \
