@@ -37,8 +37,6 @@ services:
       - "8080:80"
     environment:
       IS_DOCKER: "true"
-      APP_ENV: development
-      NODE_ENV: development
       DB_HOST: wordpress_db
       DB_PASSWORD: wordpress
       DB_NAME: wordpress
@@ -50,6 +48,7 @@ services:
       # For debugging only:
       WP_DEBUG: "true"
       WP_DEBUG_DISPLAY: "true"
+      PHP_OPCACHE_VALIDATE_TIMESTAMPS: 0
 
 volumes:
   db-data:
