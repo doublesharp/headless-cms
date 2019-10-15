@@ -19,7 +19,12 @@ unzip "/tmp/plugins/${PLUGIN}.zip" -d /tmp/plugins/unzipped && \
 mv /tmp/plugins/unzipped/* "${WP_PLUGINS_DIR}/${PLUGIN}" && \
 \
 PLUGIN=advanced-custom-fields && \
-curl -sL $ACF_EXTENDED_SRC -o "/tmp/plugins/${PLUGIN}.zip" && \
+curl -sL $ADVANCED_CUSTOM_FIELDS_SRC -o "/tmp/plugins/${PLUGIN}.zip" && \
+unzip "/tmp/plugins/${PLUGIN}.zip" -d /tmp/plugins/unzipped && \
+mv /tmp/plugins/unzipped/* "${WP_PLUGINS_DIR}/${PLUGIN}" && \
+\
+PLUGIN=advanced-custom-fields-font-awesome && \
+curl -sL $ADVANCED_CUSTOM_FIELDS_FONT_AWESOME_SRC -o "/tmp/plugins/${PLUGIN}.zip" && \
 unzip "/tmp/plugins/${PLUGIN}.zip" -d /tmp/plugins/unzipped && \
 mv /tmp/plugins/unzipped/* "${WP_PLUGINS_DIR}/${PLUGIN}" && \
 \
@@ -78,6 +83,16 @@ curl -sL $WP_GRAPHQL_POLYLANG_SRC -o "/tmp/plugins/${PLUGIN}.zip" && \
 unzip "/tmp/plugins/${PLUGIN}.zip" -d /tmp/plugins/unzipped && \
 mv /tmp/plugins/unzipped/* "${WP_PLUGINS_DIR}/${PLUGIN}" && \
 \
+PLUGIN=fast-user-switching && \
+curl -sL $FAST_USER_SWITCHING_SRC -o "/tmp/plugins/${PLUGIN}.zip" && \
+unzip "/tmp/plugins/${PLUGIN}.zip" -d /tmp/plugins/unzipped && \
+mv /tmp/plugins/unzipped/* "${WP_PLUGINS_DIR}/${PLUGIN}" && \
+\
+PLUGIN=wp-graphql-jwt-authentication && \
+curl -sL $WP_GRAPHQL_JWT_AUTHENTICATION_SRC -o "/tmp/plugins/${PLUGIN}.zip" && \
+unzip "/tmp/plugins/${PLUGIN}.zip" -d /tmp/plugins/unzipped && \
+mv /tmp/plugins/unzipped/* "${WP_PLUGINS_DIR}/${PLUGIN}" && \
+\
 cp /usr/src/wordpress/wp-content/plugins/redis-cache/includes/object-cache.php /usr/src/wordpress/wp-content && \
 rm /usr/src/wordpress/wp-content/plugins/hello.php && \
 rm -rf /usr/src/wordpress/wp-content/themes/twentysixteen && \
@@ -85,7 +100,7 @@ rm -rf /usr/src/wordpress/wp-content/themes/twentyseventeen && \
 rm -rf /usr/src/wordpress/wp-content/themes/twentynineteen && \
 rm -rf /tmp/plugins && \
 clear && \
-ls -la /usr/src/wordpress/wp-content/plugins
+ls -l /usr/src/wordpress/wp-content/plugins
 
 
 
