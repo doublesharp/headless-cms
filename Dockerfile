@@ -2,27 +2,6 @@ FROM wordpress:5.2.3-php7.3-fpm-alpine
 LABEL Maintainer="Justin Silver <justin@secretparty.io>" \
       Description="Headless WordPress: Nginx & PHP-FPM7 based on Alpine Linux."
 
-ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0" \
-    PHP_OPCACHE_MAX_ACCELERATED_FILES="10000" \
-    PHP_OPCACHE_MEMORY_CONSUMPTION="192" \
-    PHP_OPCACHE_MAX_WASTED_PERCENTAGE="10" \
-    \
-    VERSION_ACF_TO_REST=3.1.0 \
-    VERSION_ACF_EXTENDED=0.7.9.9.9 \
-    VERSION_ADVANCED_CUSTOM_FIELDS=5.8.5 \ 
-    VERSION_AMAZON_S3_AND_CLOUDFRONT=2.2.1 \
-    VERSION_CUSTOM_POST_TYPE_UI=1.6.2 \
-    VERSION_REDIS_CACHE=1.4.3 \
-    VERSION_WP_GRAPHIQL=1.0.0 \
-    VERSION_WP_GRAPHQL=0.3.6 \
-    VERSION_WP_GRAPHQL_ACF=master \
-    VERSION_WP_GRAPHQL_INSIGHTS=master \
-    VERSION_WP_GRAPHQL_CPT_UI=1.1 \
-    VERSION_QTRANSLATE_XT=3.6.3 \
-    VERSION_POLYLANG=2.6.5 \
-    VERSION_POLYLANG_SLUG=master \
-    VERSION_WP_GRAPHQL_POLYLANG=master
-
 # install nginx and supervisor to monitor
 RUN apk --no-cache add nginx supervisor
 
@@ -37,6 +16,21 @@ RUN set -xe \
 # Add WP CLI
 RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x /usr/local/bin/wp
+
+ENV ACF_TO_REST_SRC=https://downloads.wordpress.org/plugin/acf-to-rest-api.3.1.0.zip \
+    ACF_EXTENDED_SRC=https://downloads.wordpress.org/plugin/acf-extended.0.7.9.9.9.zip \
+    ADVANCED_CUSTOM_FIELDS_SRC=https://downloads.wordpress.org/plugin/advanced-custom-fields.5.8.5.zip \
+    AMAZON_S3_AND_CLOUDFRONT_SRC=https://downloads.wordpress.org/plugin/amazon-s3-and-cloudfront.2.2.1.zip \
+    CUSTOM_POST_TYPE_UI_SRC=https://downloads.wordpress.org/plugin/custom-post-type-ui.1.6.2.zip \
+    REDIS_CACHE_SRC=https://downloads.wordpress.org/plugin/redis-cache.1.4.3.zip \
+    WP_GRAPHQL_SRC=https://github.com/wp-graphql/wp-graphql/archive/v0.3.6.zip \
+    WP_GRAPHIQL_SRC=https://github.com/wp-graphql/wp-graphiql/archive/v1.0.0.zip \
+    WP_GRAPHQL_ACF_SRC=https://github.com/wp-graphql/wp-graphql-acf/archive/master.zip \
+    WP_GRAPHQL_INSIGHTS_SRC=https://github.com/wp-graphql/wp-graphql-insights/archive/master.zip \
+    WP_GRAPHQL_CPT_UI_SRC=https://github.com/wp-graphql/wp-graphql-custom-post-type-ui/archive/v1.1.zip \
+    POLYLANG_SRC=https://downloads.wordpress.org/plugin/polylang.2.6.5.zip \
+    POLYLANG_SLUG_SRC=https://github.com/grappler/polylang-slug/archive/master.zip \
+    WP_GRAPHQL_POLYLANG_SRC=https://github.com/doublesharp/wp-graphql-polylang/archive/master.zip
 
 # Install WP plugins
 COPY install-plugins.sh .
@@ -67,6 +61,11 @@ RUN chown www-data:www-data /usr/src/wordpress/wp-config.php \
   && chown www-data:www-data /usr/src/wordpress/wp-secrets.php \
   && chmod 640 /usr/src/wordpress/wp-secrets.php
 
+ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0" \
+    PHP_OPCACHE_MAX_ACCELERATED_FILES="10000" \
+    PHP_OPCACHE_MEMORY_CONSUMPTION="192" \
+    PHP_OPCACHE_MAX_WASTED_PERCENTAGE="10"
+    
 # Entrypoint to copy wp-content
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]
