@@ -28,7 +28,7 @@ if (!defined('ABSPATH')) {
 }
 
 // /define('WP_CACHE', true);
-define('WP_REDIS_SHOW_STATS', true);
+// define('WP_REDIS_SHOW_STATS', true);
 
 // include secrets (copied in Dockerfile)
 require_once(ABSPATH . 'wp-secrets.php');
