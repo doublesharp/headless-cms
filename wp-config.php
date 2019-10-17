@@ -24,10 +24,10 @@ foreach ($_ENV as $key => $value) {
 
 // define ABSPATH as the location of this file
 if (!defined('ABSPATH')) {
-    define('ABSPATH', dirname(__FILE__) . '/');
+  define('ABSPATH', dirname(__FILE__) . '/');
 }
 
-// /define('WP_CACHE', true);
+// define('WP_CACHE', true);
 // define('WP_REDIS_SHOW_STATS', true);
 
 // include secrets (copied in Dockerfile)
