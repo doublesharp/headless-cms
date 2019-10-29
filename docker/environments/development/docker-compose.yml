@@ -32,6 +32,7 @@ services:
       - redis
       - wordpress_db
     volumes:
+      - ../../../wordpress:/var/www/wordpress:cached
       - ../../../wp-content:/var/www/wp-content:cached
     ports:
       - "8080:80"

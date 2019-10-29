@@ -13,10 +13,6 @@ RUN set -xe \
     && docker-php-ext-enable redis \
     && apk del .phpize-deps
 
-# Add WP CLI
-RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-    && chmod +x /usr/local/bin/wp
-
 ENV ACF_TO_REST_SRC=https://downloads.wordpress.org/plugin/acf-to-rest-api.3.1.0.zip \
     ACF_EXTENDED_SRC=https://downloads.wordpress.org/plugin/acf-extended.0.7.9.9.9.zip \
     ADVANCED_CUSTOM_FIELDS_SRC=https://downloads.wordpress.org/plugin/advanced-custom-fields.5.8.5.zip \
@@ -37,11 +33,11 @@ ENV ACF_TO_REST_SRC=https://downloads.wordpress.org/plugin/acf-to-rest-api.3.1.0
     USER_ROLE_EDITOR_SRC=https://downloads.wordpress.org/plugin/user-role-editor.4.52.zip
 
 # Install WP plugins
-COPY install-plugins.sh .
+COPY config/install-plugins.sh .
 RUN source ./install-plugins.sh
 
 # WP theme
-COPY theme/* /usr/src/wordpress/wp-content/themes/headless-cms/
+COPY config/wordpress/theme/* /usr/src/wordpress/wp-content/themes/headless-cms/
 
 # Configure NGINX
 COPY config/nginx.conf /etc/nginx/nginx.conf
@@ -55,15 +51,14 @@ COPY config/fpm-pool.conf /usr/local/etc/php/php-fpm.d/zzz_custom.conf
 # Configure supervisord
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+RUN mkdir -p /usr/conf
+COPY config/wordpress/wp-*.php /usr/conf/wordpress/
+
 # wp-content volume
 VOLUME /var/www/wp-content
 
-# WP config / secrets
-COPY wp-*.php /usr/src/wordpress/
-RUN chown www-data:www-data /usr/src/wordpress/wp-config.php \
-    && chmod 640 /usr/src/wordpress/wp-config.php \
-    && chown www-data:www-data /usr/src/wordpress/wp-secrets.php \
-    && chmod 640 /usr/src/wordpress/wp-secrets.php
+# these files are symlinked to the wordpress config
+VOLUME /var/www/wordpress
 
 ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0" \
     PHP_OPCACHE_MAX_ACCELERATED_FILES="10000" \
