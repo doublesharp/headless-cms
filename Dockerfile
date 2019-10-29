@@ -10,7 +10,7 @@ RUN set -xe \
     && apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS \
     # && docker-php-ext-install -j "$(nproc)" name_of_extension \
     && pecl install -o -f redis \
-	  && docker-php-ext-enable redis \
+    && docker-php-ext-enable redis \
     && apk del .phpize-deps
 
 # Add WP CLI
@@ -61,9 +61,9 @@ VOLUME /var/www/wp-content
 # WP config / secrets
 COPY wp-*.php /usr/src/wordpress/
 RUN chown www-data:www-data /usr/src/wordpress/wp-config.php \
-  && chmod 640 /usr/src/wordpress/wp-config.php \
-  && chown www-data:www-data /usr/src/wordpress/wp-secrets.php \
-  && chmod 640 /usr/src/wordpress/wp-secrets.php
+    && chmod 640 /usr/src/wordpress/wp-config.php \
+    && chown www-data:www-data /usr/src/wordpress/wp-secrets.php \
+    && chmod 640 /usr/src/wordpress/wp-secrets.php
 
 ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0" \
     PHP_OPCACHE_MAX_ACCELERATED_FILES="10000" \
