@@ -4,7 +4,7 @@ services:
   redis:
     image: redis:5.0.4-alpine
     volumes:
-      - redis_data:/var/lib/redis
+      - redis_data:/var/lib/redis:delegated
     ports:
       - "6380:6379"
     logging:
@@ -13,7 +13,7 @@ services:
   wordpress_db:
     image: bianjp/mariadb-alpine
     volumes:
-      - "db-data:/var/lib/mysql"
+      - db-data:/var/lib/mysql:delegated
     ports:
       - "3309:3306"
     environment:
@@ -32,7 +32,7 @@ services:
       - redis
       - wordpress_db
     volumes:
-      - "../../../wp-content:/var/www/wp-content"
+      - ../../../wp-content:/var/www/wp-content:cached
     ports:
       - "8080:80"
     environment:
