@@ -14,7 +14,8 @@ define('WP_DEFAULT_THEME', 'headless-cms');
 // set our wordpress table prefix
 $table_prefix = getenv('TABLE_PREFIX') ?: 'wp_';
 
-// definie all environment variables
+// define all environment variables
+// should include secrets from https://api.wordpress.org/secret-key/1.1/salt/
 foreach ($_ENV as $key => $value) {
     $capitalized = strtoupper($key);
     if (!defined($capitalized) && !empty($value)) {
@@ -26,9 +27,6 @@ foreach ($_ENV as $key => $value) {
 if (!defined('ABSPATH')) {
   define('ABSPATH', dirname(__FILE__) . '/');
 }
-
-// include secrets (copied in Dockerfile)
-require_once(ABSPATH . 'wp-secrets.php');
 
 // include default settings file
 require_once(ABSPATH . 'wp-settings.php');

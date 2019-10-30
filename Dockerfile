@@ -38,6 +38,8 @@ RUN source ./install-plugins.sh
 
 # WP theme
 COPY config/wordpress/theme/* /usr/src/wordpress/wp-content/themes/headless-cms/
+# WP default healthcheck
+COPY config/wordpress/healthcheck.php /usr/src/wordpress/wp-content/
 
 # Configure NGINX
 COPY config/nginx.conf /etc/nginx/nginx.conf
@@ -51,14 +53,13 @@ COPY config/fpm-pool.conf /usr/local/etc/php/php-fpm.d/zzz_custom.conf
 # Configure supervisord
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN mkdir -p /usr/conf
-COPY config/wordpress/wp-*.php /usr/conf/wordpress/
+# WP config
+COPY config/wordpress/wp-config.php /usr/src/wordpress/
+RUN chown www-data:www-data /usr/src/wordpress/wp-config.php \
+    && chmod 640 /usr/src/wordpress/wp-config.php
 
 # wp-content volume
 VOLUME /var/www/wp-content
-
-# these files are symlinked to the wordpress config
-VOLUME /var/www/wordpress
 
 ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0" \
     PHP_OPCACHE_MAX_ACCELERATED_FILES="10000" \
@@ -66,11 +67,11 @@ ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0" \
     PHP_OPCACHE_MAX_WASTED_PERCENTAGE="10"
     
 # Entrypoint to copy wp-content
-COPY entrypoint.sh /entrypoint.sh
+COPY config/entrypoint.sh /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]
 
 EXPOSE 80
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
-HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1/wp-healthcheck.php
+HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1/wp-content/healthcheck.php

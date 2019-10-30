@@ -11,8 +11,9 @@ services:
       driver: none
 
   wordpress_db:
-    image: bianjp/mariadb-alpine
+    image: mariadb:10.4
     volumes:
+      - ./data/wordpress:/docker-entrypoint-initdb.d:ro
       - db-data:/var/lib/mysql:delegated
     ports:
       - "3309:3306"
