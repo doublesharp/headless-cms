@@ -13,10 +13,8 @@ RUN set -xe \
     && docker-php-ext-enable redis \
     && apk del .phpize-deps
 
-ENV ACF_TO_REST_SRC=https://downloads.wordpress.org/plugin/acf-to-rest-api.3.1.0.zip \
-    ACF_EXTENDED_SRC=https://downloads.wordpress.org/plugin/acf-extended.0.7.9.9.9.zip \
+ENV ACF_EXTENDED_SRC=https://downloads.wordpress.org/plugin/acf-extended.0.7.9.9.9.zip \
     ADVANCED_CUSTOM_FIELDS_SRC=https://downloads.wordpress.org/plugin/advanced-custom-fields.5.8.5.zip \
-    ADVANCED_CUSTOM_FIELDS_FONT_AWESOME_SRC=https://downloads.wordpress.org/plugin/advanced-custom-fields-font-awesome.zip \
     AMAZON_S3_AND_CLOUDFRONT_SRC=https://downloads.wordpress.org/plugin/amazon-s3-and-cloudfront.2.2.1.zip \
     CUSTOM_POST_TYPE_UI_SRC=https://downloads.wordpress.org/plugin/custom-post-type-ui.1.6.2.zip \
     REDIS_CACHE_SRC=https://downloads.wordpress.org/plugin/redis-cache.1.4.3.zip \
@@ -28,10 +26,8 @@ ENV ACF_TO_REST_SRC=https://downloads.wordpress.org/plugin/acf-to-rest-api.3.1.0
     WP_GRAPHQL_JWT_AUTHENTICATION_SRC=https://github.com/wp-graphql/wp-graphql-jwt-authentication/archive/master.zip \
     POLYLANG_SRC=https://downloads.wordpress.org/plugin/polylang.2.6.5.zip \
     POLYLANG_SLUG_SRC=https://github.com/grappler/polylang-slug/archive/master.zip \
-    WP_GRAPHQL_POLYLANG_SRC=https://github.com/doublesharp/wp-graphql-polylang/archive/master.zip \
-    FAST_USER_SWITCHING_SRC=https://downloads.wordpress.org/plugin/fast-user-switching.zip \
-    USER_ROLE_EDITOR_SRC=https://downloads.wordpress.org/plugin/user-role-editor.4.52.zip
-
+    WP_GRAPHQL_POLYLANG_SRC=https://github.com/doublesharp/wp-graphql-polylang/archive/master.zip
+    
 # Install WP plugins
 COPY config/install-plugins.sh .
 RUN source ./install-plugins.sh

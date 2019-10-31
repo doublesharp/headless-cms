@@ -5,8 +5,6 @@ services:
     image: redis:5.0.4-alpine
     volumes:
       - redis_data:/var/lib/redis:delegated
-    ports:
-      - "6380:6379"
     logging:
       driver: none
 

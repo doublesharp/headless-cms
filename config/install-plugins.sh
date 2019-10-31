@@ -8,23 +8,13 @@ mkdir -p ${WP_PLUGINS_DIR} && \
 mkdir -p /tmp/plugins/unzipped && \
 echo "Installing default plugins..." && \
 \
-PLUGIN=acf-to-rest-api && \
-curl -sL $ACF_TO_REST_SRC -o "/tmp/plugins/${PLUGIN}.zip" && \
-unzip "/tmp/plugins/${PLUGIN}.zip" -d /tmp/plugins/unzipped && \
-mv /tmp/plugins/unzipped/* "${WP_PLUGINS_DIR}/${PLUGIN}" && \
-\
 PLUGIN=acf-extended && \
-curl -sL $ACF_TO_REST_SRC -o "/tmp/plugins/${PLUGIN}.zip" && \
+curl -sL $ACF_EXTENDED_SRC -o "/tmp/plugins/${PLUGIN}.zip" && \
 unzip "/tmp/plugins/${PLUGIN}.zip" -d /tmp/plugins/unzipped && \
 mv /tmp/plugins/unzipped/* "${WP_PLUGINS_DIR}/${PLUGIN}" && \
 \
 PLUGIN=advanced-custom-fields && \
 curl -sL $ADVANCED_CUSTOM_FIELDS_SRC -o "/tmp/plugins/${PLUGIN}.zip" && \
-unzip "/tmp/plugins/${PLUGIN}.zip" -d /tmp/plugins/unzipped && \
-mv /tmp/plugins/unzipped/* "${WP_PLUGINS_DIR}/${PLUGIN}" && \
-\
-PLUGIN=advanced-custom-fields-font-awesome && \
-curl -sL $ADVANCED_CUSTOM_FIELDS_FONT_AWESOME_SRC -o "/tmp/plugins/${PLUGIN}.zip" && \
 unzip "/tmp/plugins/${PLUGIN}.zip" -d /tmp/plugins/unzipped && \
 mv /tmp/plugins/unzipped/* "${WP_PLUGINS_DIR}/${PLUGIN}" && \
 \
@@ -80,11 +70,6 @@ mv /tmp/plugins/unzipped/* "${WP_PLUGINS_DIR}/${PLUGIN}" && \
 \
 PLUGIN=wp-graphql-polylang && \
 curl -sL $WP_GRAPHQL_POLYLANG_SRC -o "/tmp/plugins/${PLUGIN}.zip" && \
-unzip "/tmp/plugins/${PLUGIN}.zip" -d /tmp/plugins/unzipped && \
-mv /tmp/plugins/unzipped/* "${WP_PLUGINS_DIR}/${PLUGIN}" && \
-\
-PLUGIN=fast-user-switching && \
-curl -sL $FAST_USER_SWITCHING_SRC -o "/tmp/plugins/${PLUGIN}.zip" && \
 unzip "/tmp/plugins/${PLUGIN}.zip" -d /tmp/plugins/unzipped && \
 mv /tmp/plugins/unzipped/* "${WP_PLUGINS_DIR}/${PLUGIN}" && \
 \
