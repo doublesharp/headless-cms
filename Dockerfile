@@ -27,15 +27,16 @@ ENV ACF_EXTENDED_SRC=https://downloads.wordpress.org/plugin/acf-extended.0.7.9.9
     POLYLANG_SRC=https://downloads.wordpress.org/plugin/polylang.2.6.5.zip \
     POLYLANG_SLUG_SRC=https://github.com/grappler/polylang-slug/archive/master.zip \
     WP_GRAPHQL_POLYLANG_SRC=https://github.com/doublesharp/wp-graphql-polylang/archive/master.zip
-    
+
 # Install WP plugins
 COPY config/install-plugins.sh .
 RUN source ./install-plugins.sh
 
 # WP theme
 COPY config/wordpress/theme/* /usr/src/wordpress/wp-content/themes/headless-cms/
-# WP default healthcheck
-COPY config/wordpress/healthcheck.php /usr/src/wordpress/wp-content/
+
+# WP default healthcheck, used to copy into 
+COPY config/wordpress/healthcheck.php /usr/src/wordpress/wp-content
 
 # Configure NGINX
 COPY config/nginx.conf /etc/nginx/nginx.conf
@@ -70,4 +71,4 @@ EXPOSE 80
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
-HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1/wp-content/healthcheck.php
+HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1/healthcheck.php
