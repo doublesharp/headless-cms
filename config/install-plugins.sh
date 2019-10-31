@@ -83,9 +83,4 @@ rm /usr/src/wordpress/wp-content/plugins/hello.php && \
 rm -rf /usr/src/wordpress/wp-content/themes/twentysixteen && \
 rm -rf /usr/src/wordpress/wp-content/themes/twentyseventeen && \
 rm -rf /usr/src/wordpress/wp-content/themes/twentynineteen && \
-rm -rf /tmp/plugins && \
-clear && \
-ls -l /usr/src/wordpress/wp-content/plugins
-
-
-
+rm -rf /tmp/plugins
