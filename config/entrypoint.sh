@@ -13,6 +13,7 @@ if [ ! "$(ls -A "/var/www/wp-content" 2>/dev/null)" ]; then
   chown -R www-data:www-data /var/www/wp-content
 fi
 
+# copy healthcheck.php to wp-content volume
 if [ ! -e /var/www/wp-content/healthcheck.php ]; then
   echo 'healthcheck: Setting up wp-content/healthcheck.php'
   echo 'healthcheck:   Copying /usr/src/healthcheck.php to /var/www/wp-content'
@@ -21,10 +22,14 @@ if [ ! -e /var/www/wp-content/healthcheck.php ]; then
     echo 'healthcheck:   Removing old link for /usr/src/wordpress/healthcheck.php'
     unlink /usr/src/wordpress/healthcheck.php
   fi
-  echo 'healthcheck:   Linking /var/www/wp-content/healthcheck.php to /usr/src/wordpress/'
+fi
+
+# link wp-content healthcheck
+if [ ! -e /usr/src/wordpress/healthcheck.php ]; then
+  echo 'healthcheck: Linking /var/www/wp-content/healthcheck.php to /usr/src/wordpress/'
   ln -s /var/www/wp-content/healthcheck.php /usr/src/wordpress/
-  echo 'healthcheck:   Changing ownership of /usr/src/wordpress/healthcheck.php'
-  chown www-data:www-data /usr/src/wordpress/healthcheck.php
+  # echo 'healthcheck:   Changing ownership of /usr/src/wordpress/healthcheck.php'
+  # chown www-data:www-data /var/www/wp-content/healthcheck.php
 fi
 
 exec "$@"
