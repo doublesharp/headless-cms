@@ -17,10 +17,14 @@ $table_prefix = getenv('TABLE_PREFIX') ?: 'wp_';
 // define all environment variables
 // should include secrets from https://api.wordpress.org/secret-key/1.1/salt/
 foreach ($_ENV as $key => $value) {
-    $capitalized = strtoupper($key);
-    if (!defined($capitalized) && !empty($value)) {
-        define($capitalized, $value);
-    }
+  $capitalized = strtoupper($key);
+  if (!defined($capitalized) && !empty($value)) {
+    define($capitalized, $value);
+  }
+}
+
+if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && 'https' == $_SERVER['HTTP_X_FORWARDED_PROTO'] ) {
+  $_SERVER['HTTPS'] = 'on';
 }
 
 // define ABSPATH as the location of this file
