@@ -9,9 +9,10 @@ if [ ! "$(ls -A "/var/www/wp-content" 2>/dev/null)" ]; then
   # Copy wp-content from Wordpress src to volume
   echo 'wp-content:   Copying /usr/src/wordpress/wp-content to /var/www/'
   cp -r /usr/src/wordpress/wp-content /var/www/
-  echo 'wp-content:   Updating ownership of /var/www/wp-content'
-  chown -R www-data:www-data /var/www/wp-content
 fi
+
+# echo 'wp-content:   Updating ownership of /var/www/wp-content'
+# chown -R wordpress:wordpress /var/www/wp-content
 
 # copy healthcheck.php to wp-content volume
 if [ ! -e /var/www/wp-content/healthcheck.php ]; then
@@ -28,8 +29,6 @@ fi
 if [ ! -e /usr/src/wordpress/healthcheck.php ]; then
   echo 'healthcheck: Linking /var/www/wp-content/healthcheck.php to /usr/src/wordpress/'
   ln -s /var/www/wp-content/healthcheck.php /usr/src/wordpress/
-  # echo 'healthcheck:   Changing ownership of /usr/src/wordpress/healthcheck.php'
-  # chown www-data:www-data /var/www/wp-content/healthcheck.php
 fi
 
 exec "$@"
