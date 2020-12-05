@@ -1,14 +1,15 @@
-FROM wordpress:5.3-php7.3-fpm-alpine
+FROM wordpress:5.3.2-php7.4-fpm-alpine
 LABEL Maintainer="Justin Silver <justin@secretparty.io>" \
       Description="Headless WordPress: Nginx & PHP-FPM7 based on Alpine Linux."
 
 # install nginx and supervisor to monitor
-RUN apk --no-cache add nginx supervisor
+RUN apk add --no-cache --update \
+    bash jq nginx supervisor
 
 # Create our non-priviledged user that will run wordpress.
 RUN set -xe; \
     addgroup --gid 420 -S wordpress; \
-    adduser -S -h /var/www/wp-content -s /bin/sh -u 420 -G wordpress wordpress
+    adduser -S -h /home/wordpress -s /bin/sh -u 420 -G wordpress wordpress
 
 # install php extensions
 RUN set -xe; \
@@ -40,24 +41,11 @@ RUN set -xe; \
       apk add --virtual .phpexts-rundeps $runDeps; \
       apk del .build-deps
 
-# Configure NGINX
-COPY rootfs/etc/supervisor/conf.d/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Configure NGINX
-COPY rootfs/etc/nginx/nginx.conf /etc/nginx/nginx.conf
-
-# Configure PHP
-COPY rootfs/usr/local/etc/php/conf.d/php.ini /usr/local/etc/php/conf.d/zzz-php.ini
-
-# Configure PHP-FPM
-COPY rootfs/usr/local/etc/php-fpm.d/* /usr/local/etc/php-fpm.d/
-COPY rootfs/usr/local/etc/php-fpm.conf /usr/local/etc/php-fpm.conf
-
-# WP theme
-COPY rootfs/usr/src/wordpress/wp-content/themes/headless-cms/* /usr/src/wordpress/wp-content/themes/headless-cms/
-
-# WP default healthcheck, used to copy into 
-COPY rootfs/usr/src/wordpress/wp-content/healthcheck.php /usr/src/wordpress/wp-content/
+# wp-cli completions
+RUN set -xe; \
+    mkdir -p ~/.wp-cli/; \
+    curl -L https://raw.githubusercontent.com/wp-cli/wp-cli/master/utils/wp-completion.bash -o $HOME/.wp-cli/wp-completion.bash; \
+    echo "source $HOME/.wp-cli/wp-completion.bash" >> $HOME/.bashrc;
 
 ARG ACF_EXTENDED_SRC=https://downloads.wordpress.org/plugin/acf-extended.0.8.3.1.zip
 ARG ADVANCED_CUSTOM_FIELDS_SRC=https://downloads.wordpress.org/plugin/advanced-custom-fields.5.8.7.zip
@@ -78,6 +66,25 @@ ARG WP_GRAPHQL_POLYLANG_SRC=https://github.com/doublesharp/wp-graphql-polylang/a
 COPY rootfs/usr/local/bin/* /usr/local/bin/
 RUN install-plugins.sh
 
+# Configure NGINX
+COPY rootfs/etc/supervisor/conf.d/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Configure NGINX
+COPY rootfs/etc/nginx/nginx.conf /etc/nginx/nginx.conf
+
+# Configure PHP
+COPY rootfs/usr/local/etc/php/conf.d/php.ini /usr/local/etc/php/conf.d/zzz-php.ini
+
+# Configure PHP-FPM
+COPY rootfs/usr/local/etc/php-fpm.d/* /usr/local/etc/php-fpm.d/
+COPY rootfs/usr/local/etc/php-fpm.conf /usr/local/etc/php-fpm.conf
+
+# WP theme
+COPY rootfs/usr/src/wordpress/wp-content/themes/headless-cms/* /usr/src/wordpress/wp-content/themes/headless-cms/
+
+# WP default healthcheck, used to copy into 
+COPY rootfs/usr/src/wordpress/wp-content/healthcheck.php /usr/src/wordpress/wp-content/
+
 # WP config
 COPY rootfs/usr/src/wordpress/wp-config.php /usr/src/wordpress/
 
@@ -91,7 +98,9 @@ ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0" \
     PHP_OPCACHE_MAX_ACCELERATED_FILES="10000" \
     PHP_OPCACHE_MEMORY_CONSUMPTION="192" \
     PHP_OPCACHE_MAX_WASTED_PERCENTAGE="10"
-    
+
+WORKDIR /usr/src/wordpress
+
 # Entrypoint to copy wp-content
 ENTRYPOINT [ "entrypoint.sh" ]
 
