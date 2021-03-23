@@ -1,37 +1,30 @@
-FROM wordpress:5.5.3-php7.4-fpm-alpine
+FROM wordpress:5.7.0-php7.4-fpm-alpine
 LABEL Maintainer="Justin Silver <justin@secretparty.io>" \
   Description="Headless WordPress: Nginx & PHP-FPM7 based on Alpine Linux."
 
-# install nginx and supervisor to monitor
-RUN apk add --no-cache --update \
-  bash jq nginx supervisor
-
-# Create our non-priviledged user that will run wordpress.
 RUN set -xe; \
+  # install nginx and supervisor to monitor
+  apk add --no-cache --update \
+  bash jq nginx supervisor; \
+  # Create our non-priviledged user that will run wordpress.
   addgroup --gid 420 -S wordpress; \
-  adduser -S -h /home/wordpress -s /bin/sh -u 420 -G wordpress wordpress
-
-# install php extensions
-RUN set -xe; \
+  adduser -S -h /home/wordpress -s /bin/sh -u 420 -G wordpress wordpress; \
+  # install php extensions
   apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
   # build tools
   autoconf g++ gcc make \
   # lib tools
   bzip2-dev freetype-dev gettext-dev icu-dev imagemagick-dev libintl libjpeg-turbo-dev \
-  #  libmcrypt-dev 
   libpng-dev libxslt-dev libzip-dev \
   ; \
   docker-php-ext-install -j$(nproc) \
   bz2 calendar gettext intl opcache pcntl pdo_mysql soap xsl \
   ; \
-  pecl channel-update pecl.php.net && \
-  pecl install -o -f \
-  redis \
-  # xdebug \
-  ; \
-  docker-php-ext-enable \
-  redis \
-  ; \
+  pecl channel-update pecl.php.net; \
+  pecl install -o -f redis; \
+  docker-php-ext-enable redis; \
+  # pecl install -o -f xdebug; \
+  # docker-php-ext-enable xdebug; \
   runDeps="$( \
   scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
   | tr ',' '\n' \
@@ -39,10 +32,8 @@ RUN set -xe; \
   | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
   )"; \
   apk add --virtual .phpexts-rundeps $runDeps; \
-  apk del .build-deps
-
-# wp-cli completions
-RUN set -xe; \
+  apk del .build-deps; \
+  # wp-cli completions
   mkdir -p ~/.wp-cli/; \
   curl -L https://raw.githubusercontent.com/wp-cli/wp-cli/master/utils/wp-completion.bash -o $HOME/.wp-cli/wp-completion.bash; \
   echo "source $HOME/.wp-cli/wp-completion.bash" >> $HOME/.bashrc;
