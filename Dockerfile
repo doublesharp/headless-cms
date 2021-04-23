@@ -62,7 +62,18 @@ ARG WP_GRAPHQL_POLYLANG_SRC=https://github.com/valu-digital/wp-graphql-polylang/
 COPY rootfs/usr/local/bin/* /usr/local/bin/
 RUN install-plugins.sh
 
-# Configure NGINX
+# WP-CLI
+ENV TERM="xterm" \
+  PAGER="busybox more"
+RUN set -xe; \
+  curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /usr/local/bin/wp; \
+  chmod +x /usr/local/bin/wp; \
+  # completions
+  mkdir -p ~/.wp-cli/; \
+  curl -L https://raw.githubusercontent.com/wp-cli/wp-cli/master/utils/wp-completion.bash -o $HOME/.wp-cli/wp-completion.bash; \
+  echo "source $HOME/.wp-cli/wp-completion.bash" >> $HOME/.bashrc;
+
+# Configure Supervisr
 COPY rootfs/etc/supervisor/conf.d/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Configure NGINX
