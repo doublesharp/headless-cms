@@ -2,6 +2,11 @@ FROM wordpress:5.7.0-php7.4-fpm-alpine
 LABEL Maintainer="Justin Silver <justin@secretparty.io>" \
   Description="Headless WordPress: Nginx & PHP-FPM7 based on Alpine Linux."
 
+# RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/community/ --allow-untrusted gnu-libiconv
+# copy from prebuilt
+COPY /rootfs/usr/lib/preloadable_libiconv.so /usr/lib/preloadable_libiconv.so
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
+
 RUN set -xe; \
   # install nginx and supervisor to monitor
   apk add --no-cache --update \
