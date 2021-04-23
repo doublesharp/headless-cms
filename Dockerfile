@@ -106,6 +106,11 @@ ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0" \
   PHP_OPCACHE_MEMORY_CONSUMPTION="192" \
   PHP_OPCACHE_MAX_WASTED_PERCENTAGE="10"
 
+RUN set -xe;\
+  cd /usr/local/etc/php/conf.d/; \
+  mv docker-php-ext-opcache.ini docker-php-ext-opcache.ini.disabled; \
+  mv opcache-recommended.ini opcache-recommended.ini.disabled;
+
 WORKDIR /usr/src/wordpress
 
 # Entrypoint to copy wp-content
