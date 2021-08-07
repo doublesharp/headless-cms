@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3.4'
 
 services:
   wordpress:
@@ -9,9 +9,9 @@ services:
     volumes:
       - wp-content:/var/www/wp-content:cached
     ports:
-      - "8080:80"
+      - '8080:80'
     environment:
-      IS_DOCKER: "true"
+      IS_DOCKER: 'true'
       DB_HOST: wordpress_db
       DB_PASSWORD: wordpress
       DB_NAME: wordpress
@@ -21,8 +21,8 @@ services:
       WP_REDIS_HOST: redis
       WP_REDIS_DATABASE: 4
       # For debugging only:
-      WP_DEBUG: "true"
-      WP_DEBUG_DISPLAY: "true"
+      WP_DEBUG: 'true'
+      WP_DEBUG_DISPLAY: 'true'
       PHP_OPCACHE_VALIDATE_TIMESTAMPS: 0
 
   wordpress_db:
@@ -37,11 +37,11 @@ services:
       MYSQL_PASSWORD: wordpress
     logging:
       driver: none
-  
+
   redis:
     image: redis:5.0.4-alpine
     logging:
-      driver: none 
+      driver: none
 
 volumes:
   db-data: {}
