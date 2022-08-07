@@ -1,4 +1,4 @@
-FROM wordpress:5.8-php7.4-fpm-alpine
+FROM wordpress:6.0-php7.4-fpm-alpine
 LABEL Maintainer="Justin Silver <justin@secretparty.io>" \
   Description="Headless WordPress: Nginx & PHP-FPM7 based on Alpine Linux."
 
