@@ -23,7 +23,7 @@ foreach ($_ENV as $key => $value) {
   }
 }
 
-if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && 'https' == $_SERVER['HTTP_X_FORWARDED_PROTO'] ) {
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && 'https' == $_SERVER['HTTP_X_FORWARDED_PROTO']) {
   $_SERVER['HTTPS'] = 'on';
 }
 
