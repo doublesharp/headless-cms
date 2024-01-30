@@ -1,6 +1,6 @@
-FROM wordpress:6.0-php7.4-fpm-alpine
+FROM wordpress:6.4.2-php8.1-fpm-alpine
 LABEL Maintainer="Justin Silver <justin@secretparty.io>" \
-  Description="Headless WordPress: Nginx & PHP-FPM7 based on Alpine Linux."
+  Description="Headless WordPress: Nginx & PHP8-FPM based on Alpine Linux."
 
 # RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/community/ --allow-untrusted gnu-libiconv
 # copy from prebuilt
@@ -58,7 +58,7 @@ RUN set -xe; \
   curl -L https://raw.githubusercontent.com/wp-cli/wp-cli/master/utils/wp-completion.bash -o $HOME/.wp-cli/wp-completion.bash; \
   echo "source $HOME/.wp-cli/wp-completion.bash" >> $HOME/.bashrc;
 
-# Configure Supervisr
+# Configure Supervisor
 COPY rootfs/etc/supervisor/conf.d/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Configure NGINX

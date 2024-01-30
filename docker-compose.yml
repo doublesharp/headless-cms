@@ -24,9 +24,10 @@ services:
       WP_DEBUG: 'true'
       WP_DEBUG_DISPLAY: 'true'
       PHP_OPCACHE_VALIDATE_TIMESTAMPS: 0
+      AUTH_KEY: ${AUTH_KEY}
 
   wordpress_db:
-    image: mariadb:10.3
+    image: doublesharp/mariadb-alpine:10.6
     volumes:
       - ./db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
       - db-data:/var/lib/mysql:delegated
@@ -39,7 +40,7 @@ services:
       driver: none
 
   redis:
-    image: redis:5.0.4-alpine
+    image: redis:7.0-alpine
     logging:
       driver: none
 
