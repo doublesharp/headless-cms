@@ -37,7 +37,7 @@ RUN set -xe; \
   apk del .build-deps; \
   # install nginx and supervisor to monitor
   apk add --no-cache --update \
-  bash jq nginx supervisor; \
+  bash gettext jq nginx supervisor; \
   # wp-cli completions
   mkdir -p ~/.wp-cli/; \
   curl -L https://raw.githubusercontent.com/wp-cli/wp-cli/master/utils/wp-completion.bash -o $HOME/.wp-cli/wp-completion.bash; \
@@ -63,6 +63,7 @@ COPY rootfs/etc/supervisor/conf.d/supervisord.conf /etc/supervisor/conf.d/superv
 
 # Configure NGINX
 COPY rootfs/etc/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY rootfs/etc/nginx/templates/* /etc/nginx/templates/
 
 # Configure PHP
 COPY rootfs/usr/local/etc/php/conf.d/php.ini /usr/local/etc/php/conf.d/zzz-php.ini

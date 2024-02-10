@@ -3,6 +3,14 @@
 # terminate on errors
 set -e
 
+echo "Merging environment variables to NGINX configuration"
+for f in /etc/nginx/templates/*; do
+    f_new=$(echo "$f" | sed 's?^/templates?/conf.d?')
+    cat "$f" |
+        envsubst "$(printf '${%s} ' $(env | cut -d'=' -f1))" \
+        >"$f_new"
+done
+
 # Check if volume is empty
 if [ ! "$(ls -A "/var/www/wp-content" 2>/dev/null)" ]; then
   echo 'wp-content: Setting up wp-content volume'
