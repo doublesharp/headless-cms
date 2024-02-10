@@ -8,10 +8,13 @@ COPY /rootfs/usr/lib/preloadable_libiconv.so /usr/lib/preloadable_libiconv.so
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
 ARG DOCKER_USER=wordpress
+ARG DOCKER_UID=1001
+ENV DOCKER_USER=${DOCKER_USER} \
+    DOCKER_UID=${DOCKER_UID} 
 
 RUN set -xe; \
   # Create our non-priviledged user that will run wordpress.
-  addgroup -S $DOCKER_USER ; \ 
+  addgroup --gid $DOCKER_UID -S $DOCKER_USER; \ 
   adduser -S -h /home/$DOCKER_USER -s /bin/sh $DOCKER_USER -G $DOCKER_USER; \
   # install php extensions
   apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
@@ -76,8 +79,8 @@ VOLUME /etc/nginx/includes
 COPY rootfs/usr/local/etc/php/conf.d/php.ini /usr/local/etc/php/conf.d/zzz-php.ini
 
 # Configure PHP-FPM
-COPY rootfs/usr/local/etc/php-fpm.d/* /usr/local/etc/php-fpm.d/
-COPY rootfs/usr/local/etc/php-fpm.conf /usr/local/etc/php-fpm.conf
+COPY rootfs/usr/local/etc/php-fpm.conf /usr/local/etc/php-fpm.conf.template
+COPY rootfs/usr/local/etc/php-fpm.d/* /usr/local/etc/php-fpm.d.templates/
 
 # WP theme
 COPY rootfs/usr/src/wordpress/wp-content/themes/headless-cms/* /usr/src/wordpress/wp-content/themes/headless-cms/

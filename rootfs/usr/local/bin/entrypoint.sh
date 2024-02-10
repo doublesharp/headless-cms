@@ -4,9 +4,9 @@
 set -e
 
 echo "Merging environment variables to NGINX configuration"
-templates=("nginx.conf.template" "conf.d.templates/" )
+templates=("/etc/nginx/nginx.conf.template" "/etc/nginx/conf.d.templates/" "/usr/local/etc/php-fpm.conf.template" "/usr/local/etc/php-fpm.d.templates/")
 for template in "${templates[@]}"; do
-    for filename in /etc/nginx/"$template"*; do
+    for filename in "$template"*; do
         if [ -f "$filename" ]; then
             newname=$(echo "$filename" | sed 's?\.template$??' | sed 's?\.templates/?/?')
             echo "  Merge $filename --> $newname"
@@ -46,7 +46,6 @@ if [ ! -e /usr/src/wordpress/healthcheck.php ]; then
 fi
 
 # echo 'wp-content:   Updating ownership of /var/www/wp-content'
-# chown -R $DOCKER_USER:$DOCKER_USER /var/www/wp-content /var/lib/nginx
-
+chown -R $DOCKER_USER:$DOCKER_USER /var/www/wp-content /var/lib/nginx
 
 exec "$@"
