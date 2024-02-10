@@ -11,8 +11,8 @@ if [ ! "$(ls -A "/var/www/wp-content" 2>/dev/null)" ]; then
   cp -r /usr/src/wordpress/wp-content /var/www/
 fi
 
-# echo 'wp-content:   Updating ownership of /var/www/wp-content'
-# chown -R wordpress:wordpress /var/www/wp-content
+echo 'wp-content:   Updating ownership of /var/www/wp-content'
+chown -R wordpress:wordpress /var/www/wp-content
 
 # copy healthcheck.php to wp-content volume
 if [ ! -e /var/www/wp-content/healthcheck.php ]; then
