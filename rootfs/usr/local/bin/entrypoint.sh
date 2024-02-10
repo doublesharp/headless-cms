@@ -4,19 +4,21 @@
 set -e
 
 echo "Merging environment variables to NGINX configuration"
-for f in /etc/nginx/conf.templates/*; do
-    if [ -f "$f" ]; then
-      f_new=$(echo "$f" | sed 's?/conf.templates/?/conf.d/?')
-      cat "$f" |
-          envsubst "$(printf '${%s} ' $(env | cut -d'=' -f1))" \
-          >"$f_new"
-    fi
+templates=("nginx.conf.template" "conf.d.templates/" )
+for template in "${templates[@]}"; do
+    for filename in /etc/nginx/"$template"*; do
+        if [ -f "$filename" ]; then
+            newname=$(echo "$filename" | sed 's?\.template$??' | sed 's?\.templates/?/?')
+            echo "  Merge $filename --> $newname"
+            cat "$filename" |
+            envsubst "$(printf '${%s} ' $(env | cut -d'=' -f1))" \
+            >"$newname"
+        fi
+    done
 done
-cat "/etc/nginx/nginx.template" |
-    envsubst "$(printf '${%s} ' $(env | cut -d'=' -f1))" \
-    >"/etc/nginx/nginx.conf"
+
 echo "Checking NGINX configuration"
-nginx -t;
+nginx -t
 
 # Check if volume is empty
 if [ ! "$(ls -A "/var/www/wp-content" 2>/dev/null)" ]; then

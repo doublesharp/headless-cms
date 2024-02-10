@@ -65,8 +65,12 @@ RUN set -xe; \
 COPY rootfs/etc/supervisor/conf.d/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Configure NGINX
-COPY rootfs/etc/nginx/nginx.conf /etc/nginx/nginx.template
-COPY rootfs/etc/nginx/conf.d/ /etc/nginx/conf.templates/
+COPY rootfs/etc/nginx/nginx.conf /etc/nginx/nginx.conf.template
+COPY rootfs/etc/nginx/conf.d/ /etc/nginx/conf.d.templates/
+
+VOLUME /etc/nginx/conf.d
+VOLUME /etc/nginx/ssl
+VOLUME /etc/nginx/includes
 
 # Configure PHP
 COPY rootfs/usr/local/etc/php/conf.d/php.ini /usr/local/etc/php/conf.d/zzz-php.ini
