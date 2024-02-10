@@ -80,7 +80,7 @@ COPY rootfs/usr/src/wordpress/wp-content/healthcheck.php /usr/src/wordpress/wp-c
 # WP config
 COPY rootfs/usr/src/wordpress/wp-config.php /usr/src/wordpress/
 
-RUN chown -R wordpress:wordpress /usr/src/wordpress && \
+RUN chown -R wordpress:wordpress /usr/src/wordpress /var/lib/nginx/ && \
   chmod 640 /usr/src/wordpress/wp-config.php
 
 # wp-content volume
