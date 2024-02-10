@@ -19,7 +19,7 @@ if (defined('WP_CLI')) {
 }
 
 // check query string values post_type=elementor_library or page=elementor-app
-if ($_SERVER['HTTP_HOST'] == $_ENV['ADMIN_HOST'] && ($_GET['action'] == 'elementor' || $_GET['page'] == 'hello-theme-settings')) {
+if (isset($_ENV['ADMIN_HOST']) && $_SERVER['HTTP_HOST'] == $_ENV['ADMIN_HOST'] && ((isset($_GET['action']) && $_GET['action'] == 'elementor') || (isset($_GET['page']) && $_GET['page'] == 'hello-theme-settings'))) {
   define('WP_HOME', 'https://' . $_SERVER['HTTP_HOST']);
   define('WP_SITEURL', 'https://' . $_SERVER['HTTP_HOST']);
 }
