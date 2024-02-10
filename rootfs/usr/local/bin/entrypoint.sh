@@ -4,12 +4,19 @@
 set -e
 
 echo "Merging environment variables to NGINX configuration"
-for f in /etc/nginx/templates/*; do
-    f_new=$(echo "$f" | sed 's?^/templates?/conf.d?')
-    cat "$f" |
-        envsubst "$(printf '${%s} ' $(env | cut -d'=' -f1))" \
-        >"$f_new"
+for f in /etc/nginx/conf.templates/*; do
+    if [ -f "$f" ]; then
+      f_new=$(echo "$f" | sed 's?/conf.templates/?/conf.d/?')
+      cat "$f" |
+          envsubst "$(printf '${%s} ' $(env | cut -d'=' -f1))" \
+          >"$f_new"
+    fi
 done
+cat "/etc/nginx/nginx.template" |
+    envsubst "$(printf '${%s} ' $(env | cut -d'=' -f1))" \
+    >"/etc/nginx/nginx.conf"
+echo "Checking NGINX configuration"
+nginx -t;
 
 # Check if volume is empty
 if [ ! "$(ls -A "/var/www/wp-content" 2>/dev/null)" ]; then
@@ -18,9 +25,6 @@ if [ ! "$(ls -A "/var/www/wp-content" 2>/dev/null)" ]; then
   echo 'wp-content:   Copying /usr/src/wordpress/wp-content to /var/www/'
   cp -r /usr/src/wordpress/wp-content /var/www/
 fi
-
-echo 'wp-content:   Updating ownership of /var/www/wp-content'
-chown -R wordpress:wordpress /var/www/wp-content /var/lib/nginx
 
 # copy healthcheck.php to wp-content volume
 if [ ! -e /var/www/wp-content/healthcheck.php ]; then
@@ -38,5 +42,9 @@ if [ ! -e /usr/src/wordpress/healthcheck.php ]; then
   echo 'healthcheck: Linking /var/www/wp-content/healthcheck.php to /usr/src/wordpress/'
   ln -s /var/www/wp-content/healthcheck.php /usr/src/wordpress/
 fi
+
+# echo 'wp-content:   Updating ownership of /var/www/wp-content'
+# chown -R $DOCKER_USER:$DOCKER_USER /var/www/wp-content /var/lib/nginx
+
 
 exec "$@"

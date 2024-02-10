@@ -7,10 +7,12 @@ LABEL Maintainer="Justin Silver <justin@secretparty.io>" \
 COPY /rootfs/usr/lib/preloadable_libiconv.so /usr/lib/preloadable_libiconv.so
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
+ARG DOCKER_USER=wordpress
+
 RUN set -xe; \
   # Create our non-priviledged user that will run wordpress.
-  addgroup --gid 420 -S wordpress; \
-  adduser -S -h /home/wordpress -s /bin/sh -u 420 -G wordpress wordpress; \
+  addgroup -S $DOCKER_USER ; \ 
+  adduser -S -h /home/$DOCKER_USER -s /bin/sh $DOCKER_USER -G $DOCKER_USER; \
   # install php extensions
   apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
   # build tools
@@ -56,14 +58,15 @@ RUN set -xe; \
   # completions
   mkdir -p ~/.wp-cli/; \
   curl -L https://raw.githubusercontent.com/wp-cli/wp-cli/master/utils/wp-completion.bash -o $HOME/.wp-cli/wp-completion.bash; \
-  echo "source $HOME/.wp-cli/wp-completion.bash" >> $HOME/.bashrc;
+  echo "source $HOME/.wp-cli/wp-completion.bash" >> $HOME/.bashrc; \
+  mkdir -p /etc/nginx/conf.d;
 
 # Configure Supervisor
 COPY rootfs/etc/supervisor/conf.d/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Configure NGINX
-COPY rootfs/etc/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY rootfs/etc/nginx/templates/* /etc/nginx/templates/
+COPY rootfs/etc/nginx/nginx.conf /etc/nginx/nginx.template
+COPY rootfs/etc/nginx/conf.d/ /etc/nginx/conf.templates/
 
 # Configure PHP
 COPY rootfs/usr/local/etc/php/conf.d/php.ini /usr/local/etc/php/conf.d/zzz-php.ini
@@ -81,7 +84,7 @@ COPY rootfs/usr/src/wordpress/wp-content/healthcheck.php /usr/src/wordpress/wp-c
 # WP config
 COPY rootfs/usr/src/wordpress/wp-config.php /usr/src/wordpress/
 
-RUN chown -R wordpress:wordpress /usr/src/wordpress /var/lib/nginx/ && \
+RUN chown -R $DOCKER_USER:$DOCKER_USER /usr/src/wordpress /var/lib/nginx/ && \
   chmod 640 /usr/src/wordpress/wp-config.php
 
 # wp-content volume
