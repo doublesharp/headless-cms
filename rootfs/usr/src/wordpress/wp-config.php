@@ -18,12 +18,10 @@ if (defined('WP_CLI')) {
   $_SERVER['HTTP_HOST'] = $_SERVER['SERVER_NAME'] = $_ENV['WP_HOME'];
 }
 
-if ($_SERVER['HTTP_HOST'] == $_ENV['ADMIN_HOST']) {
+// check query string values post_type=elementor_library or page=elementor-app
+if ($_SERVER['HTTP_HOST'] == $_ENV['ADMIN_HOST'] && $_GET['action'] == 'elementor') {
   define('WP_HOME', 'https://' . $_SERVER['HTTP_HOST']);
   define('WP_SITEURL', 'https://' . $_SERVER['HTTP_HOST']);
-  define('WP_CONTENT_URL', 'https://' . $_SERVER['HTTP_HOST'] . '/wp-content');
-  define('WP_PLUGIN_URL', 'https://' . $_SERVER['HTTP_HOST'] . '/wp-content/plugins');
-  define('WPMU_PLUGIN_URL', 'https://' . $_SERVER['HTTP_HOST'] . '/wp-content/mu-plugins');
 }
 
 // define all environment variables
