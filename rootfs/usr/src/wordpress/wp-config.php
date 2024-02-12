@@ -29,6 +29,11 @@ if (isset($_ENV['ADMIN_HOST']) && $_SERVER['HTTP_HOST'] == $_ENV['ADMIN_HOST'] &
 foreach ($_ENV as $key => $value) {
   $capitalized = strtoupper($key);
   if (!defined($capitalized) && !empty($value)) {
+    if ($value === 'true') {
+      $value = true;
+    } elseif ($value === 'false') {
+      $value = false;
+    }
     define($capitalized, $value);
   }
 }
